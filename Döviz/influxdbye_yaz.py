@@ -1,5 +1,5 @@
 from influxdb_client import InfluxDBClient, Point,WritePrecision
-from datetime import datetime
+from datetime import datetime,timezone
 import requests
 
 API_KEY = "63cc8fb0c37a3c006bf3eb5c"
@@ -12,16 +12,17 @@ BASE_URL = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/USD"
 
 def doviz_kuru_al():
     
-    repsonse = requests.get(BASE_URL)
-    if repsonse.status_code != 200:
+    response = requests.get(BASE_URL)
+    if response.status_code != 200:
         raise Exception("API isteği başarısız oldu.")
     
-    data = repsonse.json()
+    data = response.json()
     return data["conversion_rates"]
 
-def influxdb(rates):
+def influxdbye_yaz(rates):
+    
     client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG)
-    write_api = client.write_api(write_options=WritePrecision.NS)
+    write_api = client.write_api()
     
     point = Point("doviz_kuru")\
         .tag("base", "USD")\
@@ -29,12 +30,15 @@ def influxdb(rates):
         .field("GBP", rates['GBP']) \
         .field("JPY", rates['JPY']) \
         .field("TRY", rates['TRY']) \
-        .time(datetime.utcnow(), WritePrecision.NS)
+        .time(datetime.now(timezone.utc), WritePrecision.NS)
         
     write_api.write(bucket=INFLUXDB_BUCKET,org=INFLUXDB_ORG, record=point)
     print("Veri InfluxDB'ye yazıldı.")
+    write_api.close()
+    client.close()
     
 if __name__ == "__main__":
     doviz = doviz_kuru_al()
-    influxdb(doviz)
+    influxdbye_yaz(doviz)
+    
 
