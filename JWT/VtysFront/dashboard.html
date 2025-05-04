@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <h2>Hoşgeldiniz, <span id="username"></span>!</h2>
+        <button onclick="logout()">Çıkış Yap</button>
+    </div>
+
+    <script>
+        // Token kontrolü yapıyoruz
+        if (!localStorage.getItem("accessToken")) {
+            window.location.href = "index.html"; // Giriş sayfasına yönlendir
+        }
+
+        // Kullanıcı adını ekrana yazıyoruz
+        const username = localStorage.getItem("username") || "Kullanıcı";
+        document.getElementById("username").textContent = username;
+
+        // Kullanıcı çıkışı yaparsa token'ı silip giriş sayfasına yönlendiriyoruz
+        function logout() {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("username");
+            window.location.href = "index.html"; // Giriş sayfasına yönlendir
+        }
+    </script>
+</body>
+
+</html>
