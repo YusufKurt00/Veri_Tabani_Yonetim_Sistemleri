@@ -1,0 +1,9 @@
+com\aliacar\config\CorsConfig.class
+com\aliacar\service\impl\UserServiceImpl.class
+com\aliacar\controller\impl\UserControllerImpl.class
+com\aliacar\repository\UserRepository.class
+com\aliacar\starter\VtysApplication.class
+com\aliacar\controller\IUserController.class
+com\aliacar\config\SecurityConfig.class
+com\aliacar\service\IUserService.class
+com\aliacar\model\User.class
